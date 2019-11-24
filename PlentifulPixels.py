@@ -38,7 +38,9 @@ class Object:
 def main():
     #Setup
 
+    CreatePixels()
     CreateRandomObject()
+
 
     while True:
         #Physics()
@@ -58,30 +60,51 @@ def CreateRandomObject():
     objects[cur].vy = random.randint(-2,2)
     objects[cur].color = random.randint(1,4)
     
+def CreatePixels():
+    global pixel
+    global raw
+    a = 0
+    b = 0
+    c = 0
+    d = 0
+    slot = 0
+
+    while(a < nec):
+        while(b < nec):
+            pixel.append(Rectangle(Point(d - resolution,c - resolution),Point(d + resolution,c + resolution)))
+            pixel[slot].draw(win)
+            slot += 1
+            b += 1
+            d += resolution
+
+        
+        a += 1
+        c += resolution
 
 def ClearRender():
     global pixel
 
     #Notice how the pixel is NOT undrawn before it is deleted. Doing so would cause the window to flash every frame update
-
-    for a in pixel:
+    a = len(pixel) - 1
+    while(a > 1):
+        pixel[a].undraw()
         del pixel[a]
+        a -= 1
 
 def Render():
     global pixel
     global raw
-    ClearRender()
+
     a = 0
     b = 0
     c = 0
     d = 0
-    slot = 1
+    slot = 0
 
     while(a < nec):
         c += resolution
         while(b < nec):
             d += resolution
-            pixel.append(Rectangle(Point(d - resolution,c - resolution),Point(d,c)))
             rgb = round(Blend(c,d))
             if(rgb == 0):
                 pixel[slot].setFill(pixeloff)
@@ -95,7 +118,6 @@ def Render():
                 pixel[slot].setFill("yellow")
             if(rgb >= 5):
                 pixel[slot].setFill("white")
-            pixel[slot].draw(win)
             slot += 1
             b += 1
         d = 0
@@ -119,10 +141,11 @@ def Present(x = 0,y = 0,cur = 1):
 def Blend(x = 0, y = 0):
     global objects
     color = 0
-    
-    for cur in objects:
+    cur = 0
+    while(cur < len(objects)):
         if(Present(x,y,cur) == True):
             color += objects[cur].color
+        cur += 1
             
     return color
 
