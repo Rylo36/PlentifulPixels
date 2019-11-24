@@ -4,7 +4,7 @@ import random
 
 #Config
 windowsize = 500 #window dimensions, recommended is 500
-resolution = 10 #size of a pixel, recommended is 10
+resolution = 20 #size of a pixel, recommended is 20
 objectstohave = 8#Number of objects to have on the canvas at all times
 #WARNING: The resolution CAN NOT be higher than the window size
 
