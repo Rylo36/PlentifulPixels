@@ -25,7 +25,7 @@ deepeffect = 2 #Only change this if you know what your doing, i recommend 2
 #Physics Engine
 objects = []
 raw = []
-enablecollision = False
+enablecollision = False #Not currently working (planned to be)
 
 #Performance
 fasterplease = False #Set it to true if you experience slow render times
