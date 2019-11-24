@@ -3,9 +3,9 @@ import math
 import random
 
 #Config
-windowsize = 500 #window dimensions, recommended is 1000
-resolution = 10 #size of a pixel, recommended is 10
-starterobjects = 5#Number of starter objects
+windowsize = 400 #window dimensions, recommended is 1000
+resolution = 5 #size of a pixel, recommended is 10
+objectstohave = 5#Number of objects to have on the canvas at all times
 #WARNING: The resolution CAN NOT be higher than the window size
 
 pixeloff = "black"
@@ -31,7 +31,7 @@ win = GraphWin("Plentiful Pixels by Ryan Lopez", windowsize, windowsize)
 
 #Object Maker Timer
 
-timer = [0,20] #Do not touch timer[0]
+timer = [-1,10] #Do not touch timer[0]
 
 #Objects
 
@@ -47,24 +47,29 @@ class Object:
 
 def main():
     global timer
-    global starterobjects
+    global objectstohave
+    global objects
     #Setup
 
     CreatePixels()
 
     a = 0
 
-    while(a < starterobjects):
+    while(a < objectstohave):
         CreateRandomObject()
         a += 1
 
     while True:
-        
-        timer[0] += 1
+        #if(timer[0] != -1):
+        #    timer[0] += 1
 
-        if(timer[0] >= timer[1]):
-            timer[0] = 0
+        #    if(timer[0] >= timer[1]):
+        #        timer[0] = 0
+        #        CreateRandomObject()
+
+        if(len(objects) < objectstohave):
             CreateRandomObject()
+
         ObjectCleaner() #Removes objects that are off the screen
         Physics()
         Render()
