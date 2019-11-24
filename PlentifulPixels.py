@@ -4,7 +4,7 @@ import random
 
 #Config
 windowsize = 800 #window dimensions, recommended is 1000
-resolution = 50 #size of a pixel, recommended is 10
+resolution = 15 #size of a pixel, recommended is 10
 #WARNING: The resolution CAN NOT be higher than the window size
 
 pixeloff = "black"
@@ -34,7 +34,7 @@ class Object:
     y = 0
     vx = 0
     vy = 0
-    size = 20#This will never change (unless done here)
+    size = 50#This will never change (unless done here)
 
 
 def main():
