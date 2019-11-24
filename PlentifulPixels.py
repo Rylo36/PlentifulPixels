@@ -3,8 +3,8 @@ import math
 import random
 
 #Config
-windowsize = 600 #window dimensions, recommended is 1000
-resolution = 10 #size of a pixel, recommended is 10
+windowsize = 400 #window dimensions, recommended is 1000
+resolution = 5 #size of a pixel, recommended is 10
 #WARNING: The resolution CAN NOT be higher than the window size
 
 pixeloff = "black"
@@ -15,6 +15,9 @@ pixel = []
 enablesquare = True
 enablecircle = True
 colorsupport = True
+
+#Color Config
+maxintensity = 150
 
 #Physics Engine
 objects = []
@@ -44,6 +47,11 @@ def main():
     #Setup
 
     CreatePixels()
+    CreateRandomObject()
+    CreateRandomObject()
+    CreateRandomObject()
+    CreateRandomObject()
+    CreateRandomObject()
     CreateRandomObject()
     CreateRandomObject()
     CreateRandomObject()
@@ -98,6 +106,7 @@ def Physics():
 
 def CreateRandomObject():
     global objects
+    global maxintensity
 
     cur = len(objects)
 
@@ -105,14 +114,14 @@ def CreateRandomObject():
 
     speed = 30
     if(random.randint(1,2) == 1):
-        objects[cur].type = "Circle"
+        objects[cur].type = "Square"
     else:
         objects[cur].type = "Circle"
     objects[cur].x = random.randint(1,windowsize)
     objects[cur].y = random.randint(1,windowsize)
     objects[cur].vx = random.randint(-speed,speed)
     objects[cur].vy = random.randint(-speed,speed)
-    objects[cur].color = [random.randint(1,255),random.randint(1,255),random.randint(1,255)]
+    objects[cur].color = [random.randint(1,maxintensity),random.randint(1,maxintensity),random.randint(1,maxintensity)]
     
 def CreatePixels():
     global pixel
@@ -223,7 +232,7 @@ def Blend(x = 0, y = 0,mode = 0):
             if(color == 0):
                 color = objects[cur].color[mode]
             else:
-                color = (objects[cur].color[mode] + color[mode]) / 2
+                color = (objects[cur].color[mode] + color) / 2
         cur += 1
             
     return color
