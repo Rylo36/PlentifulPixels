@@ -3,9 +3,9 @@ import math
 import random
 
 #Config
-windowsize = 400 #window dimensions, recommended is 1000
+windowsize = 800 #window dimensions, recommended is 500
 resolution = 10 #size of a pixel, recommended is 10
-objectstohave = 5#Number of objects to have on the canvas at all times
+objectstohave = 8#Number of objects to have on the canvas at all times
 #WARNING: The resolution CAN NOT be higher than the window size
 
 pixeloff = "black"
@@ -20,12 +20,16 @@ colorsupport = True
 #Color Config
 maxintensity = 200
 minintensity = 100
-deepeffect = 2 #Only change this if you know what your doing
+deepeffect = 2 #Only change this if you know what your doing, i recommend 2
 
 #Physics Engine
 objects = []
 raw = []
 enablecollision = False
+
+#Performance
+fasterplease = True #Set it to true if you experience slow render times
+lowres = False #Set it to true if you must, but i really recommend the hd colors if you can
 
 win = GraphWin("Plentiful Pixels by Ryan Lopez", windowsize, windowsize)
 
@@ -106,7 +110,6 @@ def Physics():
         if(enablecollision == False):
             objects[a].x += objects[a].vx
             objects[a].y += objects[a].vy
-
         a += 1
 
 def CreateRandomObject():
@@ -180,9 +183,16 @@ def Render():
         while(d <= windowsize):
             
             rgb = [0,0,0]
-            rgb[0] = round((Blend(c,d,0) + Blend(c - (resolution / 2),d - (resolution / 2),0) + Blend(c - resolution,d - resolution,0) + Blend(c,d - resolution,0) + Blend(c - resolution,d,0)) / 5)
-            rgb[1] = round((Blend(c,d,1) + Blend(c - (resolution / 2),d - (resolution / 2),1) + Blend(c - resolution,d - resolution,1) + Blend(c,d - resolution,1) + Blend(c - resolution,d,1)) / 5)
-            rgb[2] = round((Blend(c,d,2) + Blend(c - (resolution / 2),d - (resolution / 2),2) + Blend(c - resolution,d - resolution,2) + Blend(c,d - resolution,2) + Blend(c - resolution,d,2)) / 5)
+            if(fasterplease == False):
+                rgb[0] = round((Blend(c,d,0) + Blend(c - (resolution / 2),d - (resolution / 2),0) + Blend(c - resolution,d - resolution,0) + Blend(c,d - resolution,0) + Blend(c - resolution,d,0)) / 5)
+                rgb[1] = round((Blend(c,d,1) + Blend(c - (resolution / 2),d - (resolution / 2),1) + Blend(c - resolution,d - resolution,1) + Blend(c,d - resolution,1) + Blend(c - resolution,d,1)) / 5)
+                rgb[2] = round((Blend(c,d,2) + Blend(c - (resolution / 2),d - (resolution / 2),2) + Blend(c - resolution,d - resolution,2) + Blend(c,d - resolution,2) + Blend(c - resolution,d,2)) / 5)
+            else:
+                rgb[0] = round(Blend(c,d,0))
+                rgb[1] = round(Blend(c,d,1))
+                rgb[2] = round(Blend(c,d,2))
+            
+
             pixel[slot].setFill(color_rgb(rgb[0],rgb[1],rgb[2]))
             slot += 1
             d += resolution
@@ -222,14 +232,18 @@ def Blend(x = 0, y = 0,mode = 0):
     while(cur < len(objects)):
         if(Present(x,y,cur) == True):
 
-            distance = math.sqrt(((abs(objects[cur].x -x)*(abs(objects[cur].x -x)) + (abs(objects[cur].y - y)) * (abs(objects[cur].y - y)))))
+            
+            postdeep = 0
+            if(lowres == False):
+                distance = math.sqrt(((abs(objects[cur].x -x)*(abs(objects[cur].x -x)) + (abs(objects[cur].y - y)) * (abs(objects[cur].y - y)))))
+                postdeep = objects[cur].color[mode] - (distance * deepeffect)
 
-            postdeep = objects[cur].color[mode] - (distance * deepeffect)
+                if(postdeep < 0):
+                    postdeep = 0
 
-            if(postdeep < 0):
-                postdeep = 0
-
-            round(postdeep)
+                round(postdeep)
+            else:
+                postdeep = objects[cur].color[mode]
 
             if(color == 0):
                 color = postdeep
