@@ -64,7 +64,7 @@ def Render():
     b = 0
     c = 0
     d = 0
-    slot = 1a
+    slot = 1
 
     while(a < nec):
         c += resolution
