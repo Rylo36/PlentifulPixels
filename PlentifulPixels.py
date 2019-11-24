@@ -3,7 +3,7 @@ import math
 import random
 
 #Config
-windowsize = 800 #window dimensions, recommended is 500
+windowsize = 500 #window dimensions, recommended is 500
 resolution = 10 #size of a pixel, recommended is 10
 objectstohave = 8#Number of objects to have on the canvas at all times
 #WARNING: The resolution CAN NOT be higher than the window size
@@ -28,7 +28,7 @@ raw = []
 enablecollision = False
 
 #Performance
-fasterplease = True #Set it to true if you experience slow render times
+fasterplease = False #Set it to true if you experience slow render times
 lowres = False #Set it to true if you must, but i really recommend the hd colors if you can
 
 win = GraphWin("Plentiful Pixels by Ryan Lopez", windowsize, windowsize)
@@ -192,6 +192,9 @@ def Render():
                 rgb[1] = round(Blend(c,d,1))
                 rgb[2] = round(Blend(c,d,2))
             
+            if(colorsupport == False):
+                rgb[1] = rgb[0]
+                rgb[2] = rgb[0]
 
             pixel[slot].setFill(color_rgb(rgb[0],rgb[1],rgb[2]))
             slot += 1
@@ -212,12 +215,12 @@ def Present(x = 0,y = 0,cur = 1):
     pi = math.pi
     distance = math.sqrt(((abs(ox -x)*(abs(ox -x)) + (abs(oy - y)) * (abs(oy - y)))))
 
-    if(objects[cur].type == "Square"):
+    if(objects[cur].type == "Square" and enablesquare == True):
         if(x <= ox + size and x >= ox - size and y <= oy + size and y >= oy - size):
             return True
         else:
             return False
-    elif(objects[cur].type == "Circle"):
+    elif(objects[cur].type == "Circle" and enablecircle == True):
         if(distance <= size):
             return True
         else:
