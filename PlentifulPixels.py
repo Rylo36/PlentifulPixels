@@ -4,7 +4,7 @@ import random
 
 #Config
 windowsize = 800 #window dimensions, recommended is 1000
-resolution = 15 #size of a pixel, recommended is 10
+resolution = 30 #size of a pixel, recommended is 10
 #WARNING: The resolution CAN NOT be higher than the window size
 
 pixeloff = "black"
@@ -132,7 +132,7 @@ def Render():
     while(c < windowsize):
         while(d <= windowsize):
             
-            rgb = round(Blend(c,d))
+            rgb = round(Blend(c - (resolution / 2),d - (resolution / 2)))
             if(rgb <= 0):
                 pixel[slot].setFill(pixeloff)
             if(rgb == 1):
@@ -162,7 +162,7 @@ def Present(x = 0,y = 0,cur = 1):
     r = resolution
 
     if(objects[cur].type == "Square"):
-        if(x < ox + size and x + r > ox - size and y < oy + size and oy + r > oy - size):
+        if(x < ox + size and x > ox - size and y < oy + size and y > oy - size):
             return True
         else:
             return False
