@@ -3,8 +3,9 @@ import math
 import random
 
 #Config
-windowsize = 900 #window dimensions, recommended is 1000
+windowsize = 500 #window dimensions, recommended is 1000
 resolution = 10 #size of a pixel, recommended is 10
+starterobjects = 5#Number of starter objects
 #WARNING: The resolution CAN NOT be higher than the window size
 
 pixeloff = "black"
@@ -18,7 +19,8 @@ colorsupport = True
 
 #Color Config
 maxintensity = 200
-deepeffect = 1 #Only change this if you know what your doing
+minintensity = 100
+deepeffect = 2 #Only change this if you know what your doing
 
 #Physics Engine
 objects = []
@@ -45,19 +47,16 @@ class Object:
 
 def main():
     global timer
+    global starterobjects
     #Setup
 
     CreatePixels()
-    CreateRandomObject()
-    CreateRandomObject()
-    CreateRandomObject()
-    CreateRandomObject()
-    CreateRandomObject()
-    CreateRandomObject()
-    CreateRandomObject()
-    CreateRandomObject()
-    CreateRandomObject()
-    CreateRandomObject()
+
+    a = 0
+
+    while(a < starterobjects):
+        CreateRandomObject()
+        a += 1
 
     while True:
         
@@ -108,6 +107,7 @@ def Physics():
 def CreateRandomObject():
     global objects
     global maxintensity
+    global minintensity
 
     cur = len(objects)
 
@@ -122,7 +122,7 @@ def CreateRandomObject():
     objects[cur].y = random.randint(1,windowsize)
     objects[cur].vx = random.randint(-speed,speed)
     objects[cur].vy = random.randint(-speed,speed)
-    objects[cur].color = [random.randint(1,maxintensity),random.randint(1,maxintensity),random.randint(1,maxintensity)]
+    objects[cur].color = [random.randint(minintensity,maxintensity),random.randint(minintensity,maxintensity),random.randint(minintensity,maxintensity)]
     
 def CreatePixels():
     global pixel
@@ -136,15 +136,13 @@ def CreatePixels():
     slot = 0
 
     while(c < windowsize):
-        while(d < windowsize):
+        while(d <= windowsize):
             pixel.append(Rectangle(Point(c,d),Point(c + resolution,d + resolution)))
             #print(c," - ",d)
             pixel[slot].draw(win)
             slot += 1
             d += resolution
             b += 1
-            
-
         b = 0
         d = 0
         c += resolution
@@ -169,8 +167,8 @@ def Render():
 
     a = 0
     b = 0
-    c = resolution
-    d = resolution
+    c = 0
+    d = 0
     slot = 0
 
     while(c < windowsize):
@@ -181,18 +179,6 @@ def Render():
             rgb[1] = round((Blend(c,d,1) + Blend(c - (resolution / 2),d - (resolution / 2),1) + Blend(c - resolution,d - resolution,1) + Blend(c,d - resolution,1) + Blend(c - resolution,d,1)) / 5)
             rgb[2] = round((Blend(c,d,2) + Blend(c - (resolution / 2),d - (resolution / 2),2) + Blend(c - resolution,d - resolution,2) + Blend(c,d - resolution,2) + Blend(c - resolution,d,2)) / 5)
             pixel[slot].setFill(color_rgb(rgb[0],rgb[1],rgb[2]))
-            #if(rgb <= 0):
-            #    pixel[slot].setFill(pixeloff)
-            #if(rgb == 1):
-            #    pixel[slot].setFill("red")
-            #if(rgb == 2):
-            #    pixel[slot].setFill("blue")
-            #if(rgb == 3):
-            #    pixel[slot].setFill("green")
-            #if(rgb == 4):
-            #    pixel[slot].setFill("yellow")
-            #if(rgb >= 5):
-            #    pixel[slot].setFill("white")
             slot += 1
             d += resolution
             b += 1
