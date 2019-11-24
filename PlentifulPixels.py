@@ -3,8 +3,8 @@ import math
 import random
 
 #Config
-windowsize = 1000 #window dimensions, recommended is 1000
-resolution = 10 #size of a pixel, recommended is 10
+windowsize = 800 #window dimensions, recommended is 1000
+resolution = 50 #size of a pixel, recommended is 10
 #WARNING: The resolution CAN NOT be higher than the window size
 
 pixeloff = "black"
@@ -23,6 +23,8 @@ enablecollision = False
 
 win = GraphWin("Plentiful Pixels by Ryan Lopez", windowsize, windowsize)
 
+
+
 #Objects
 
 class Object:
@@ -40,46 +42,71 @@ def main():
 
     CreatePixels()
     CreateRandomObject()
-
+    CreateRandomObject()
+    CreateRandomObject()
 
     while True:
-        #Physics()
+        Physics()
         Render()
+   
+def Physics():
+    global objects
+    global enablecollision
+
+    max = len(objects)
+    a = 0
+
+    while(a < max):
+        
+        if(enablecollision == False):
+            objects[a].x += objects[a].vx
+            objects[a].y += objects[a].vy
+
+        a += 1
 
 def CreateRandomObject():
-    global object
+    global objects
 
     cur = len(objects)
 
     objects.append(Object())
 
+    speed = 30
+
     objects[cur].type = "Square"
     objects[cur].x = random.randint(1,windowsize)
     objects[cur].y = random.randint(1,windowsize)
-    objects[cur].vx = random.randint(-2,2)
-    objects[cur].vy = random.randint(-2,2)
+    objects[cur].vx = random.randint(-speed,speed)
+    objects[cur].vy = random.randint(-speed,speed)
     objects[cur].color = random.randint(1,4)
     
 def CreatePixels():
     global pixel
     global raw
+    global nec
+    global windowsize
     a = 0
     b = 0
     c = 0
     d = 0
     slot = 0
 
-    while(a < nec):
-        while(b < nec):
-            pixel.append(Rectangle(Point(d - resolution,c - resolution),Point(d + resolution,c + resolution)))
+    while(c < windowsize):
+        while(d < windowsize):
+            pixel.append(Rectangle(Point(c,d),Point(c + resolution,d + resolution)))
+            #print(c," - ",d)
             pixel[slot].draw(win)
             slot += 1
-            b += 1
             d += resolution
+            b += 1
+            
 
-        
-        a += 1
+        b = 0
+        d = 0
         c += resolution
+        a += 1
+        
+    print(slot, " Pixels Created!")
 
 def ClearRender():
     global pixel
@@ -87,26 +114,26 @@ def ClearRender():
     #Notice how the pixel is NOT undrawn before it is deleted. Doing so would cause the window to flash every frame update
     a = len(pixel) - 1
     while(a > 1):
-        pixel[a].undraw()
+        #pixel[a].undraw()
         del pixel[a]
         a -= 1
 
 def Render():
     global pixel
     global raw
+    global nec
 
     a = 0
     b = 0
-    c = 0
-    d = 0
+    c = resolution
+    d = resolution
     slot = 0
 
-    while(a < nec):
-        c += resolution
-        while(b < nec):
-            d += resolution
+    while(c < windowsize):
+        while(d <= windowsize):
+            
             rgb = round(Blend(c,d))
-            if(rgb == 0):
+            if(rgb <= 0):
                 pixel[slot].setFill(pixeloff)
             if(rgb == 1):
                 pixel[slot].setFill("red")
@@ -119,8 +146,11 @@ def Render():
             if(rgb >= 5):
                 pixel[slot].setFill("white")
             slot += 1
+            d += resolution
             b += 1
+        b = 0
         d = 0
+        c += resolution
         a += 1
 
 def Present(x = 0,y = 0,cur = 1):
@@ -129,9 +159,10 @@ def Present(x = 0,y = 0,cur = 1):
     size = objects[cur].size
     ox = objects[cur].x
     oy = objects[cur].y
+    r = resolution
 
     if(objects[cur].type == "Square"):
-        if(x < ox + size and x > ox - size and y < oy + size and oy > oy - size):
+        if(x < ox + size and x + r > ox - size and y < oy + size and oy + r > oy - size):
             return True
         else:
             return False
@@ -144,7 +175,10 @@ def Blend(x = 0, y = 0):
     cur = 0
     while(cur < len(objects)):
         if(Present(x,y,cur) == True):
-            color += objects[cur].color
+            if(color == 0):
+                color = objects[cur].color
+            else:
+                color = (objects[cur].color + color) / 2
         cur += 1
             
     return color
