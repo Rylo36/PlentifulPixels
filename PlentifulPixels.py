@@ -3,8 +3,8 @@ import math
 import random
 
 #Config
-windowsize = 400 #window dimensions, recommended is 1000
-resolution = 5 #size of a pixel, recommended is 10
+windowsize = 900 #window dimensions, recommended is 1000
+resolution = 10 #size of a pixel, recommended is 10
 #WARNING: The resolution CAN NOT be higher than the window size
 
 pixeloff = "black"
@@ -17,7 +17,8 @@ enablecircle = True
 colorsupport = True
 
 #Color Config
-maxintensity = 150
+maxintensity = 200
+deepeffect = 1 #Only change this if you know what your doing
 
 #Physics Engine
 objects = []
@@ -229,10 +230,20 @@ def Blend(x = 0, y = 0,mode = 0):
     cur = 0
     while(cur < len(objects)):
         if(Present(x,y,cur) == True):
+
+            distance = math.sqrt(((abs(objects[cur].x -x)*(abs(objects[cur].x -x)) + (abs(objects[cur].y - y)) * (abs(objects[cur].y - y)))))
+
+            postdeep = objects[cur].color[mode] - (distance * deepeffect)
+
+            if(postdeep < 0):
+                postdeep = 0
+
+            round(postdeep)
+
             if(color == 0):
-                color = objects[cur].color[mode]
+                color = postdeep
             else:
-                color = (objects[cur].color[mode] + color) / 2
+                color = (postdeep + color) / 2
         cur += 1
             
     return color
