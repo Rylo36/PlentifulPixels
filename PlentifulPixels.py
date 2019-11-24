@@ -38,8 +38,10 @@ class Object:
 def main():
     #Setup
 
+    CreateRandomObject()
+
     while True:
-        Physics()
+        #Physics()
         Render()
 
 def CreateRandomObject():
@@ -50,16 +52,25 @@ def CreateRandomObject():
     objects.append(Object())
 
     objects[cur].type = "Square"
-    objects[cur].x = random.rand(1,windowsize)
-    objects[cur].y = random.rand(1,windowsize)
-    objects[cur].vx = random.rand(-2,2)
-    objects[cur].vy = random.rand(-2,2)
-    objects[cur].color = random.rand(1,4)
+    objects[cur].x = random.randint(1,windowsize)
+    objects[cur].y = random.randint(1,windowsize)
+    objects[cur].vx = random.randint(-2,2)
+    objects[cur].vy = random.randint(-2,2)
+    objects[cur].color = random.randint(1,4)
     
+
+def ClearRender():
+    global pixel
+
+    #Notice how the pixel is NOT undrawn before it is deleted. Doing so would cause the window to flash every frame update
+
+    for a in pixel:
+        del pixel[a]
 
 def Render():
     global pixel
     global raw
+    ClearRender()
     a = 0
     b = 0
     c = 0
