@@ -5,7 +5,7 @@ import random
 #Config
 windowsize = 500 #window dimensions, recommended is 500
 resolution = 20 #size of a pixel, recommended is 20
-objectstohave = 8#Number of objects to have on the canvas at all times
+objectstohave = 10#Number of objects to have on the canvas at all times
 #WARNING: The resolution CAN NOT be higher than the window size
 
 pixeloff = "black"
@@ -38,6 +38,9 @@ win = GraphWin("Plentiful Pixels by Ryan Lopez", windowsize, windowsize)
 timer = [-1,10] #Do not touch timer[0]
 
 #Objects
+
+minsize = 30
+maxsize = 50
 
 class Object:
     type = "None" #Square, Circle, or None
@@ -121,15 +124,20 @@ def CreateRandomObject():
 
     objects.append(Object())
 
-    speed = 30
+    speed = 60
     if(random.randint(1,2) == 1):
         objects[cur].type = "Square"
     else:
         objects[cur].type = "Circle"
+    objects[cur].size = random.randint(minsize,maxsize)
     objects[cur].x = random.randint(1,windowsize)
     objects[cur].y = random.randint(1,windowsize)
     objects[cur].vx = random.randint(-speed,speed)
     objects[cur].vy = random.randint(-speed,speed)
+    if(objects[cur].vx == 0):
+        objects[cur].vx = 10
+    if(objects[cur].vy == 0):
+        objects[cur].vy = 10
     objects[cur].color = [random.randint(minintensity,maxintensity),random.randint(minintensity,maxintensity),random.randint(minintensity,maxintensity)]
     
 def CreatePixels():
